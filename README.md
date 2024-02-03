@@ -1,6 +1,6 @@
 ## Vehicle-Type-Classification
 
-### Vehicle Type Classification loyihasi uchun quyidagi bosqichlarni ko'rib chiqish kerak:
+#### Vehicle Type Classification loyihasi uchun quyidagi bosqichlarni ko'rib chiqish kerak:
 1. Dataset yig'ish.
 2. Dataset tozalash.
 3. Datasetni classlarga ajratish.
