@@ -6,8 +6,14 @@
 * Tasvirlarni kamera ko'ra oladigan holat uchun moslab yig'ish modelni xususiy hol uchun a'lo darajada ishlashini ta'minlaydi.
 * Dataset to'plashda balansni saqlash kerak. Har bir turga mos bo'lgan datalardan teng miqdorda bo'lib olish kerak.
 
-##### 2. Dataset tozalash.
-##### 3. Datasetni classlarga ajratish.
-##### 4. Model train qilish uchun kerakli texnologiya yoki arxitekturani qurish.
-##### 5. Modelni sinovdan o'tkazish.
+### 2. Dataset tozalash.
+
+### 3. Datasetni classlarga ajratish.
+
+### 4. Model train qilish uchun kerakli texnologiya yoki arxitekturani qurish.
+* Tensorflow tarkibidagi Keras kutubxonasidan foydalanib mashhur arxitekturalar yordamida model train qilish mumkin.
+* Yolov8.1 texnologiyasining classification uchun moslashgan tayyor modellaridan foydalanib Fine Tuning qilish.
+
+### 5. Modelni sinovdan o'tkazish.
+Modelni mavjud datalardan emas balki kameradan olingan yangi tasvirlar orqali test qilish kerak.
 
