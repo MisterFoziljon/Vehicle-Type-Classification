@@ -9,30 +9,49 @@
 ### 2. Dataset tozalash.
 
 ### 3. Datasetni classlarga ajratish.
+Classlarga ajratishda transport turlarining bir biriga o'xshashlari iloji boricha bitta classga to'planishi kerak. Masalan, labo bilan damas yoki GAZel bilan shatakka oluvchilarning boshqa classlarda bo'lishi modelning xato ishlashiga olib keladi.
+
+Tensorflow uchun:
+dataset
+|_type1
+|_type2
+|_type3
+|_type4
+|_type5
+
+Yolov8 da Fine Tuning uchun:
+dataset
+|_train
+  |_type1
+  |_type2
+  ...
+|_val
+  |_type1
+  |_type2
+  ...
 
 ### 4. Model train qilish uchun kerakli texnologiya yoki arxitekturani qurish.
 * Tensorflow tarkibidagi Keras kutubxonasidan foydalanib mashhur arxitekturalar yordamida model train qilish mumkin.
 
 ```python
-import glob
-import numpy as np
-import tensorflow as tf
-import cv2
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
+import numpy as np
+import glob
+import cv2
 
 images = []
 labels = []
 
 for path in glob.glob("dataset/*"):
     label = path[8:]
-
     for image_path in glob.glob(path+"/*"):
         image = cv2.imread(image_path)
         images.append(image)
         labels.append(label)
     
 def preprocessing(images,labels):
-    label_class = ["car","van","minitruck","truck","bus"]
+    label_class = ["type1","type2","type3","type4","type5"]
     
     images_ = []
     labels_ = []
@@ -88,8 +107,59 @@ history = model.fit(train_ds, epochs = 5, validation_data = test_ds)
 
 model.save("VehicleType2.h5")
 ```
+
 * Yolov8.1 texnologiyasining classification uchun moslashgan tayyor modellaridan foydalanib Fine Tuning qilish.
 
-### 5. Modelni sinovdan o'tkazish.
-Modelni mavjud datalardan emas balki kameradan olingan yangi tasvirlar orqali test qilish kerak.
+```python
+from ultralytics import YOLO
+model = YOLO('yolov8x-cls.pt')
+results = model.train(data='dataset/', epochs=100, imgsz=224)
+#yolo task=classify mode=train model=yolov8x-cls.pt data='dataset/' epochs=100 imgsz=224
+```
 
+### 5. Modelni sinovdan o'tkazish.
+Modelni mavjud datalardan emas, balki kameradan olingan yangi tasvirlar orqali test qilish kerak.
+```python
+from ultralytics import YOLO
+import cv2
+import torch
+import numpy as np
+
+model1 = YOLO("yolov8x.pt")
+model2 = YOLO("best.pt")
+
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+label_class = [type1, type2, type3, type4, type5]
+
+video = cv2.VideoCapture('8.mp4')
+width = int(video.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(video.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+    frame = cv2.resize(frame,(width,height),interpolation = cv2.INTER_AREA)
+        
+    results = model1.predict(frame, conf=0.5, stream = True,device = device, classes = [1,2,3,5,7])
+    
+    for result in results:
+        boxes = result.boxes.cpu().numpy()
+        
+        for box in boxes:
+            r = box.xyxy[0].astype(int)
+            xmin,ymin,xmax,ymax = r
+            vehicle = frame[ymin:ymax, xmin:xmax]
+            
+            pred = model2.predict(vehicle, stream = False)
+            cv2.rectangle(frame, r[:2], r[2:], (255, 255, 255), 2)
+            
+            frame = cv2.putText(frame, label_class[pred[0].probs.top1], r[:2], cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+    cv2.imshow("input", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+        
+video.release()
+cv2.destroyAllWindows()   
+```
