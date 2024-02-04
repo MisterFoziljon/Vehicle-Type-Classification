@@ -12,14 +12,17 @@
 Classlarga ajratishda transport turlarining bir biriga o'xshashlari iloji boricha bitta classga to'planishi kerak. Masalan, labo bilan damas yoki GAZel bilan shatakka oluvchilarning boshqa classlarda bo'lishi modelning xato ishlashiga olib keladi.
 
 Tensorflow uchun:
+```cmd
 dataset:
-   |_type1
-   |_type2
-   |_type3
-   |_type4
-   |_type5
+|_type1
+|_type2
+|_type3
+|_type4
+|_type5
+```
 
 Yolov8 da Fine Tuning uchun:
+```cmd
 dataset
 |_train
   |_type1
@@ -29,6 +32,7 @@ dataset
   |_type1
   |_type2
   ...
+```
 
 ### 4. Model train qilish uchun kerakli texnologiya yoki arxitekturani qurish.
 * Tensorflow tarkibidagi Keras kutubxonasidan foydalanib mashhur arxitekturalar yordamida model train qilish mumkin.
